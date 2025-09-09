@@ -70,8 +70,8 @@ mongoose.connect(process.env.MONGODB_URL)
   .then(() => {
     console.log("Connected to the database");
   })
-  .catch(() => {
-    console.log("Database Connection Fail");
+  .catch((e) => {
+    console.log("Database Connection Fail" + e);
   });
 
 // Routes
