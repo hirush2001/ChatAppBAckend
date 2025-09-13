@@ -1,3 +1,4 @@
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
@@ -7,7 +8,13 @@ import cors from "cors";
 import dotenv from 'dotenv';
 import http from "http";
 import { Server } from "socket.io";
-import Message from './models/Message.js';
+//import Message from './models/Message.js';
+import chatRoute from './routes/chatRoute.js';
+import otpRoute from './routes/otpRoute.js';
+import Otp from './models/Otp.js';
+import socketHandler from './controller/messageController.js';
+import messageRoute from './routes/messageRoute.js';
+
 
 dotenv.config();
 
@@ -44,20 +51,40 @@ app.use((req, res, next) => {
 });
 
 // Socket.IO
+/*
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  // Send previous chat history
-  Message.find().sort({ timestamp: 1 }).then((messages) => {
-    socket.emit("chat history", messages);
+  // Join a room using OTP
+  socket.on("joinRoom", (otp) => {
+    socket.join(otp); // join the room
+    console.log(`User ${socket.id} joined room ${otp}`);
+
+    // Notify everyone else in the room
+    socket.to(otp).emit("message", `Someone joined room ${otp}`);
   });
 
-  // Receive new message
-  socket.on("chat message", async ({ sender, message }) => {
-    const newMessage = new Message({ sender, message, timestamp: new Date() });
+  // Leave a room
+  socket.on("leaveRoom", (otp) => {
+    socket.leave(otp);
+    console.log(`User ${socket.id} left room ${otp}`);
+  });
+
+  /*
+  // Send previous chat history for this room (optional)
+  Message.find({ room: { $exists: true } }).sort({ createdAt: 1 }).then((messages) => {
+    socket.emit("chat history", messages);
+  });
+*/
+// Receive new message for this room
+  /*
+  socket.on("chat message", async ({ otp, sender, message }) => {
+    // Save message with room (OTP)
+    const newMessage = new Otp({  otp, sender, message, timestamp: new Date() });
     await newMessage.save();
 
-    io.emit("chat message", { sender, message });
+    // Emit message only to users in this room
+    io.to(otp).emit("chat message", { sender, message });
   });
 
   socket.on("disconnect", () => {
@@ -65,20 +92,36 @@ io.on("connection", (socket) => {
   });
 });
 
+
+*/
+////////////////////////
 // Database
+
+
+socketHandler(io);
 mongoose.connect(process.env.MONGODB_URL)
   .then(() => {
     console.log("Connected to the database");
+  
+
   })
   .catch(() => {
     console.log("Database Connection Fail");
   });
+  
+
+ 
 
 // Routes
 app.use("/users", userRoute);
 app.use("/login", userRoute);
-
+app.use("/otp", otpRoute);
+app.use("/verify", otpRoute);
+app.use("/chatcode", chatRoute);
+app.use("/verifycode", chatRoute);
+app.use("/socket", messageRoute);
 // Start Server
 server.listen(5000, () => {
   console.log("Server is Running on port 5000");
 });
+
