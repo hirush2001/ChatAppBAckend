@@ -105,8 +105,8 @@ mongoose.connect(process.env.MONGODB_URL)
   
 
   })
-  .catch(() => {
-    console.log("Database Connection Fail");
+  .catch((e) => {
+    console.log("Database Connection Fail" + e);
   });
   
 
