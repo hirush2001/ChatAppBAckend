@@ -10,7 +10,7 @@ const messageSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  otp: {
+  code: {
     type: String,
     required: true, // the OTP/room identifier
   },
