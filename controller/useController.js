@@ -28,40 +28,6 @@ export function createUser(req, res) {
         }
     )
 }
-/*
-
-export function loginUser(req, res) {
-    const { mobilenumber, password } = req.body;
-
-    // Find user by unique identifier (Mobilenumber)
-    User.findOne({ mobilenumber: mobilenumber }).then(user => {
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Compare password with hashed password
-        const isPasswordCorrect = bcrypt.compareSync(password, user.password);
-        if (isPasswordCorrect) {
-            const token = jwt.sign(
-                {
-                    mobilenumber: user.mobilenumber,
-                    firsName: user.firsName,
-                    lastName: user.lastName
-                },
-                process.env.JWT_KEY,
-                { expiresIn: "1h" } // optional: token expiry
-            );
-
-            res.json({ message: "Login successful", token: token });
-            
-        } else {
-            res.status(401).json({ message: "Invalid password" });
-        }
-    }).catch(err => {
-        res.status(500).json({ message: "Server error", error: err.message });
-    });
-}
-*/
 
 export function loginUser(req, res) {
     const { mobilenumber, password } = req.body;
