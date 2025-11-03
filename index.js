@@ -77,7 +77,7 @@ app.use("/chatcode", chatRoute);
 app.use("/verifycode", chatRoute);
 app.use("/socket", messageRoute);
 
-app.use("/api/products", (req, res) => {
+app.use("/products", (req, res) => {
   return res.status(200).json({
     message : "This is new feature"
   }) 
