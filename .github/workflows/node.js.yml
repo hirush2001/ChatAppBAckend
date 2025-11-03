@@ -25,5 +25,5 @@ jobs:
     - run: |
         touch .env
         echo "${{ secrets.MONGODB_URL  }}" > .env
-        - run: pm2 restart api
+    - run: pm2 restart api
     
